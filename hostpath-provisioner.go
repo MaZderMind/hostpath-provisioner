@@ -51,6 +51,10 @@ type hostPathProvisioner struct {
 	// Identity of this hostPathProvisioner, set to node's name. Used to identify
 	// "this" provisioner's PVs.
 	identity string
+
+	// Override the default reclaim-policy of dynamicly provisioned volumes
+	// (which is remove).
+	reclaimPolicy string
 }
 
 // NewHostPathProvisioner creates a new hostpath provisioner
@@ -59,9 +63,15 @@ func NewHostPathProvisioner() controller.Provisioner {
 	if nodeName == "" {
 		glog.Fatal("env variable NODE_NAME must be set so that this provisioner can identify itself")
 	}
+	pvDir := os.Getenv("PV_DIR")
+	if pvDir == "" {
+		glog.Fatal("env variable PV_DIR must be set so that this provisioner knows where to place its data")
+	}
+	reclaimPolicy := os.Getenv("PV_RECLAIM_POLICY")
 	return &hostPathProvisioner{
-		pvDir:    "/tmp/hostpath-provisioner",
-		identity: nodeName,
+		pvDir:         pvDir,
+		identity:      nodeName,
+		reclaimPolicy: reclaimPolicy,
 	}
 }
 
@@ -69,10 +79,16 @@ var _ controller.Provisioner = &hostPathProvisioner{}
 
 // Provision creates a storage asset and returns a PV object representing it.
 func (p *hostPathProvisioner) Provision(options controller.VolumeOptions) (*v1.PersistentVolume, error) {
-	path := path.Join(p.pvDir, options.PVName)
+	path := path.Join(p.pvDir, options.PVC.Namespace, options.PVC.Name, options.PVName)
+	glog.Info("creating path %v", path)
 
 	if err := os.MkdirAll(path, 0777); err != nil {
 		return nil, err
+	}
+
+	reclaimPolicy := options.PersistentVolumeReclaimPolicy
+	if p.reclaimPolicy != "" {
+		reclaimPolicy = v1.PersistentVolumeReclaimPolicy(p.reclaimPolicy)
 	}
 
 	pv := &v1.PersistentVolume{
@@ -83,7 +99,7 @@ func (p *hostPathProvisioner) Provision(options controller.VolumeOptions) (*v1.P
 			},
 		},
 		Spec: v1.PersistentVolumeSpec{
-			PersistentVolumeReclaimPolicy: options.PersistentVolumeReclaimPolicy,
+			PersistentVolumeReclaimPolicy: reclaimPolicy,
 			AccessModes:                   options.PVC.Spec.AccessModes,
 			Capacity: v1.ResourceList{
 				v1.ResourceName(v1.ResourceStorage): options.PVC.Spec.Resources.Requests[v1.ResourceName(v1.ResourceStorage)],
