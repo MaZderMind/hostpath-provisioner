@@ -14,7 +14,7 @@
 
 .PHONY: image
 
-IMAGE?=hostpath-provisioner
+IMAGE?=mazdermind/hostpath-provisioner:latest
 
 image: hostpath-provisioner
 	docker build -t $(IMAGE) -f Dockerfile.scratch .
