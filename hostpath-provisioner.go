@@ -35,7 +35,7 @@ import (
 
 const (
 	resyncPeriod              = 15 * time.Second
-	provisionerName           = "example.com/hostpath"
+	provisionerName           = "hostpath"
 	exponentialBackOffOnError = false
 	failedRetryThreshold      = 5
 	leasePeriod               = controller.DefaultLeaseDuration

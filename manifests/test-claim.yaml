@@ -1,10 +1,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: hostpath
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "example-hostpath"
+  name: hostpath-test-claim
+#  annotations:
+#    volume.beta.kubernetes.io/storage-class: "hostpath"
 spec:
+  storageClassName: "hostpath"
   accessModes:
     - ReadWriteMany
   resources:

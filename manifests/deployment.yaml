@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hostpath-provisioner
+  labels:
+    k8s-app: hostpath-provisioner
+  namespace: kube-system
+
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+
+  selector:
+    matchLabels:
+      k8s-app: hostpath-provisioner
+
+  template:
+    metadata:
+      labels:
+        k8s-app: hostpath-provisioner
+
+    spec:
+      containers:
+        - name: hostpath-provisioner
+          image: mazdermind/hostpath-provisioner:latest
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+
+            - name: PV_DIR
+              value: /var/kubernetes
+
+#            - name: PV_RECLAIM_POLICY
+#              value: Retain
+
+          volumeMounts:
+            - name: pv-volume
+              mountPath: /var/kubernetes
+
+      volumes:
+        - name: pv-volume
+          hostPath:
+            path: /var/kubernetes
