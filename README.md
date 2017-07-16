@@ -2,13 +2,13 @@
 ## TL;DR
 ```bash
 # install dynamic hostpath provisioner
-kubectl create -f https://github.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
-kubectl create -f https://github.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
-kubectl create -f https://github.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml
 
 # create a test-pvc and a pod writign to it
-kubectl create -f https://github.com/MaZderMind/hostpath-provisioner/master/manifests/test-claim.yaml
-kubectl create -f https://github.com/MaZderMind/hostpath-provisioner/master/manifests/test-pod.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/test-claim.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/test-pod.yaml
 
 # expect a file to exist on your host
 $ ls -la /var/kubernetes/default-hostpath-test-claim-pvc-*/
