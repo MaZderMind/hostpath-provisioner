@@ -12,15 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMAGE?=mazdermind/hostpath-provisioner:$(shell git rev-parse HEAD)
+IMAGE?=mazdermind/hostpath-provisioner
+
+TAG_GIT=$(IMAGE):$(shell git rev-parse HEAD)
+TAG_LATEST=$(IMAGE):latest
 
 all: dependencies hostpath-provisioner image
 
 image:
-	docker build -t $(IMAGE) -f Dockerfile.scratch .
+	docker build -t $(TAG_GIT) -f Dockerfile.scratch .
+	docker tag $(TAG_GIT) $(TAG_LATEST)
 
 push:
-	docker push $(IMAGE)
+	docker push $(TAG_GIT)
+	docker push $(TAG_LATEST)
 
 dependencies:
 	glide install -v
