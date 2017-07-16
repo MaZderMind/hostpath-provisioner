@@ -63,10 +63,12 @@ func NewHostPathProvisioner() controller.Provisioner {
 	if nodeName == "" {
 		glog.Fatal("env variable NODE_NAME must be set so that this provisioner can identify itself")
 	}
+
 	pvDir := os.Getenv("PV_DIR")
 	if pvDir == "" {
 		glog.Fatal("env variable PV_DIR must be set so that this provisioner knows where to place its data")
 	}
+
 	reclaimPolicy := os.Getenv("PV_RECLAIM_POLICY")
 	return &hostPathProvisioner{
 		pvDir:         pvDir,
@@ -80,7 +82,7 @@ var _ controller.Provisioner = &hostPathProvisioner{}
 // Provision creates a storage asset and returns a PV object representing it.
 func (p *hostPathProvisioner) Provision(options controller.VolumeOptions) (*v1.PersistentVolume, error) {
 	path := path.Join(p.pvDir, options.PVC.Namespace, options.PVC.Name, options.PVName)
-	glog.Info("creating path %v", path)
+	glog.Infof("creating backing directory: %v", path)
 
 	if err := os.MkdirAll(path, 0777); err != nil {
 		return nil, err
@@ -126,8 +128,8 @@ func (p *hostPathProvisioner) Delete(volume *v1.PersistentVolume) error {
 		return &controller.IgnoredError{Reason: "identity annotation on PV does not match ours"}
 	}
 
-	path := path.Join(p.pvDir, volume.Spec.PersistentVolumeSource.HostPath.Path)
-	glog.Info("removing path %v", path)
+	path := volume.Spec.PersistentVolumeSource.HostPath.Path
+	glog.Info("removing backing directory: %v", path)
 	if err := os.RemoveAll(path); err != nil {
 		return err
 	}
