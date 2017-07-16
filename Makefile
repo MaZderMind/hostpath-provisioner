@@ -27,6 +27,9 @@ push:
 	docker push $(TAG_GIT)
 	docker push $(TAG_LATEST)
 
+update-deployment:
+	kubectl set image --namespace=kube-system deployment/hostpath-provisioner hostpath-provisioner=$(TAG_GIT)
+
 dependencies:
 	glide install -v
 
@@ -37,4 +40,4 @@ clean:
 	rm -rf vendor
 	rm hostpath-provisioner
 
-.PHONY: all clean image push dependencies
+.PHONY: all clean image push dependencies update-deployment
