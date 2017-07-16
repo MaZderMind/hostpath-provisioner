@@ -126,7 +126,8 @@ func (p *hostPathProvisioner) Delete(volume *v1.PersistentVolume) error {
 		return &controller.IgnoredError{Reason: "identity annotation on PV does not match ours"}
 	}
 
-	path := path.Join(p.pvDir, volume.Name)
+	path := path.Join(p.pvDir, volume.Spec.PersistentVolumeSource.HostPath.Path)
+	glog.Info("removing path %v", path)
 	if err := os.RemoveAll(path); err != nil {
 		return err
 	}
