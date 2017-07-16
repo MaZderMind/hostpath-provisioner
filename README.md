@@ -11,7 +11,7 @@ kubectl create -f https://github.com/MaZderMind/hostpath-provisioner/master/mani
 kubectl create -f https://github.com/MaZderMind/hostpath-provisioner/master/manifests/test-pod.yaml
 
 # expect a file to exist on your host
-$ ls -la /var/kubernetes/default/hostpath-test-claim/pvc-*/
+$ ls -la /var/kubernetes/default-hostpath-test-claim-pvc-*/
 
 kubectl delete pod hostpath-test-pod
 kubectl delete pvc hostpath-test-claim
