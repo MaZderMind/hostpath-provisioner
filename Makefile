@@ -12,18 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY: image
-
 IMAGE?=mazdermind/hostpath-provisioner:latest
 
-image: hostpath-provisioner
+all: dependencies hostpath-provisioner image
+
+image:
 	docker build -t $(IMAGE) -f Dockerfile.scratch .
 
-hostpath-provisioner: $(shell find . -name "*.go")
+push:
+	docker push $(IMAGE)
+
+dependencies:
 	glide install -v
+
+hostpath-provisioner: $(shell find . -name "*.go")
 	CGO_ENABLED=0 go build -a -ldflags '-extldflags "-static"' -o hostpath-provisioner .
 
-.PHONY: clean
 clean:
 	rm -rf vendor
 	rm hostpath-provisioner
+
+.PHONY: all clean image push dependencies
