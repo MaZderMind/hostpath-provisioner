@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMAGE?=mazdermind/hostpath-provisioner:latest
+IMAGE?=mazdermind/hostpath-provisioner:$(shell git rev-parse HEAD)
 
 all: dependencies hostpath-provisioner image
 
