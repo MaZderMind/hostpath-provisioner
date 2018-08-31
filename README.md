@@ -35,7 +35,7 @@ In order for dynamic provision, the process of allocating and binding a suitable
 For GoogleComputeEngine, Amazon AWS and even for Minikube there are such Provisioners that know how to handle the creation of GCE-Disks, AWS-Disks or HostPaths for Minikube.
 
 # The Dynamic HostPath Provisioner
-This is a small modification to the Example given in the [kubernetes-incubator](https://github.com/kubernetes-incubator/external-storage/tree/master/docs/demo/hostpath-provisioner)-Project on how one could implement such a VolumeProvider. It adds the ability to choose a Target-Directory outside of `/tmp` on the host-system and an option to retain the Directories when the Claim goes away (by setting `PV_RECLAIM_POLICY` in the `deployment.yaml`).
+This is a small modification to the Example given in the [kubernetes-incubator](https://github.com/kubernetes-incubator/external-storage/tree/master/docs/demo/hostpath-provisioner)-Project on how one could implement such a VolumeProvider. It adds the ability to choose a Target-Directory outside of `/tmp` on the host-system and an option to retain the Directories when the Claim goes away (by setting `PV_RECLAIM_POLICY: Retain` in the `deployment.yaml`).
 
 It also improves upon the manifest-files by adding RBAC (RoleBasedAccessControl)-Configuration and a Deployment-Object.
 
