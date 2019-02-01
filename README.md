@@ -1,4 +1,6 @@
 # Dynamic Provisioning of Kubernetes HostPath Volumes
+This Reposirory and Code is #Unmaintained. You should not use it in production.
+
 ## TL;DR
 ```bash
 # install dynamic hostpath provisioner
