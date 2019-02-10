@@ -32,8 +32,8 @@ spec:
             - name: PV_DIR
               value: /var/kubernetes
 
-#            - name: PV_RECLAIM_POLICY
-#              value: Retain
+           - name: PV_RECLAIM_POLICY
+             value: Delete
 
           volumeMounts:
             - name: pv-volume
